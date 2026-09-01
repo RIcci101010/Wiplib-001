@@ -3,6 +3,8 @@ import com.ctre.phoenix6.StatusSignal;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
+import com.ctre.oenix6.configs.TalonFXConfiguration;
+import com.ctre.oenix6.configs.Slot0Configs;
 
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,22 +16,32 @@ public class ElevatorSubsystem extends SubsystemBase {
     private StatusSignal<Angle> motorPos = elevatorMotor.getPosition();
     private final double rotationsPerInch = 0.5; // rotations per inch
     private final double totalHeight = 30; // shooting heigh in inches
+    TalonFXConfiguration configs = new TalonFXConfiguration();
 
+    public ElevatorSubsystem() {
+        configs.slot0.kP = 1.1;
+        configs.slot0.kI = 0.5;
+        configs.slot0.kD = 2.0;
+        configs.slot0.kF = 0.3;
+        elevatorMotor.getConfigurator().apply(configs);
+    }
 public double getHeightInches() { // calcuates bots height in inches i hope
   motorPos.refresh();
   return motorPos.getValueAsDouble() / rotationsPerInch;
 }
     public Command zeroElevator() { // zeros motors 
         return run(() -> elevatorMotor.set(-0.2))
-        .until(() -> bottomLimit.getS1Closed.getValue())
-        .finallyDo(() -> {
+          .until(() -> bottomLimit.getS1Closed.getValue())
+          .finallyDo(() -> {
             elevatorMotor.set(0.0); 
             motorPos.refresh(); 
             elevatorMotor.setPosition(0);
-            });
-    }
-public Command MoveToScore() {
-return run(() -> elevatorMotor.set(0.2)).until(getHeightInches() >= totalHeight).finallyDo(() -> elevatorMotor.set(0.0));
+          });
 }
+public Command MoveToScore() {
+    return run(() -> elevatorMotor.set(0.2)) // want to put pid in for 0.2 in .set
+        .until(getHeightInches() >= totalHeight)
+        .finallyDo(() -> elevatorMotor.set(0.0));
+  }
 
 }
