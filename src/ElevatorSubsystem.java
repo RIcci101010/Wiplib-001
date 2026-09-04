@@ -25,6 +25,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         configs.slot0.kI = 0.5;
         configs.slot0.kD = 2.0;
         configs.slot0.kF = 0.3;
+        configs.MitionMagic.MotionMagicCruiseVelocity = 80;
+        configs.MitionMagic.MotionMagicAcceleration = 160;
+        configs.MitionMagic.MotionMagicJerk = 1600;
+
         elevatorMotor.getConfigurator().apply(configs);
     }
 private final MotionMagicVoltage m_request = new MotionMagicVoltage(0).withSlot(0);
