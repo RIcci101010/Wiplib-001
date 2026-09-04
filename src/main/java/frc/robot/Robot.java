@@ -25,7 +25,6 @@ public class Robot extends TimedRobot {
 private final Joystick m_stick = new Joystick(0);
 private final DriveSubsystem m_drive = new DriveSubsystem();
 
-
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -34,7 +33,7 @@ private final DriveSubsystem m_drive = new DriveSubsystem();
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
     m_chooser.addOption("My Auto", kCustomAuto);
     SmartDashboard.putData("Auto choices", m_chooser);
-    m_drive.setDefaultCommand(new RunCommand(() -> m_drive.drive(m_stick.getY(), m_stick.getX()), m_drive));
+    m_drive.setDefaultCommand(new RunCommand(() -> m_drive.drive(-m_stick.getY(), m_stick.getX()), m_drive));
   }
    
   /**

@@ -16,8 +16,8 @@ private final TalonFX left2 = new TalonFX(4);
         if (Math.abs(x) < 0.05) {
             x = 0.0;
         }
-        double rightspeed = y - x;
-       double leftspeed = y + x;
+        double rightspeed = y + x;
+       double leftspeed = y - x;
         right1.setControl(new DutyCycleOut(rightspeed));
             left1.setControl(new DutyCycleOut(leftspeed));
            right2.setControl(new DutyCycleOut(rightspeed));

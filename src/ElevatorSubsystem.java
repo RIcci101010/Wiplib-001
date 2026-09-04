@@ -6,10 +6,11 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.controls.PositionVoltage;
-
 import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import com.ctre.pheonix6.control.MotionMagicVoltage;
+
 public class ElevatorSubsystem extends SubsystemBase {
     private final TalonFX elevatorMotor = new TalonFX(5);
     private final CANrange distanceThing = new CANrange(6);
@@ -17,7 +18,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private StatusSignal<Angle> motorPos = elevatorMotor.getPosition();
     private final double rotationsPerInch = 0.5; // rotations per inch
     private final double totalHeight = 30; // shooting heigh in inches
-    TalonFXConfiguration configs = new TalonFXConfiguration();
+    private final TalonFXConfiguration configs = new TalonFXConfiguration();
 
     public ElevatorSubsystem() {
         configs.slot0.kP = 1.1;
@@ -26,7 +27,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         configs.slot0.kF = 0.3;
         elevatorMotor.getConfigurator().apply(configs);
     }
-private final PositionVoltage m_request = new PositionVoltage(0).withSlot(0);
+private final MotionMagicVoltage m_request = new MotionMagicVoltage(0).withSlot(0);
 
 public double getHeightInches() { // calcuates bots height in inches i hope
   motorPos.refresh();
@@ -44,10 +45,7 @@ public double getHeightInches() { // calcuates bots height in inches i hope
 public Command MoveToScore() {
     return run(() -> elevatorMotor.setControl(
       m_request.setControl(totalHeight * rotationsPerInch)));
-      
-    
-    // .until(getHeightInches() >= totalHeight)   i dont think i need these anymore, shouldnt pid just keep then at set point.
-       // .finallyDo(() -> elevatorMotor.set(0.0));
+  
   }
 
 }
