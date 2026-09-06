@@ -24,7 +24,7 @@ public class Robot extends TimedRobot {
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 private final Joystick m_stick = new Joystick(0);
 private final DriveSubsystem m_drive = new DriveSubsystem();
-
+private final ElevatorSubsystem m_elevator = new ElevatorSubsystem();
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
