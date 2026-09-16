@@ -12,7 +12,7 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 public class ElevatorSubsystem extends SubsystemBase {
     private final TalonFX elevatorMotor = new TalonFX(5);
     private final TalonFX intakeMotor = new TalonFX(8);
-    private final CANrange  distanceThing = new CANrange(6);
+    private final CANrange distanceThing = new CANrange(6);
     private final CANdi bottomLimit = new CANdi(7);
     private StatusSignal<Angle> motorPos = elevatorMotor.getPosition();
     private final double rotationsPerInch = 0.5; // rotations per inch
@@ -29,7 +29,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         elevatorMotor.getConfigurator().apply(configs);
     }
-    private final MotionMagicVoltage m_request = new MotionMagicVoltage(0).withSlot(0);
+    private final MotionMagicVoltage 
+    m_request = new MotionMagicVoltage(0).withSlot(0);
 
 public double getHeightInches() { // calcuates bots height in inches i hope
   motorPos.refresh();
@@ -42,6 +43,7 @@ public double getHeightInches() { // calcuates bots height in inches i hope
             elevatorMotor.set(0.0); 
             motorPos.refresh(); 
             elevatorMotor.setPosition(0);
+            intakeMotor.set(0.0);
           });
 }
 public Command MoveToScore() {
@@ -59,4 +61,15 @@ return run(() -> {
     }
 }).finallyDo(() -> intakeMotor.set(0.0));
 }
+public Command outTake() {
+  return run(() -> intakeMotor.set(-0.5)).finallyDo(() -> intakeMotor.set(0.0));
+}
+public Command fastOutTake() {
+  return run(() -> intakeMotor.set(-1.0)).finallyDo(() -> intakeMotor.set(0.0));
+}
+public Command stopIntake() {
+  return runOnce(() -> intakeMotor.set(0.0));
+}
+
+
 }
