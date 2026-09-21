@@ -12,6 +12,7 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 public class ElevatorSubsystem extends SubsystemBase {
     private final TalonFX elevatorMotor = new TalonFX(5);
     private final TalonFX intakeMotor = new TalonFX(8);
+    private final TalonFX flyWheel = new TalonFX(9);
     private final CANrange distanceThing = new CANrange(6);
     private final CANdi bottomLimit = new CANdi(7);
     private StatusSignal<Angle> motorPos = elevatorMotor.getPosition();
@@ -46,10 +47,17 @@ public double getHeightInches() { // calcuates bots height in inches i hope
             intakeMotor.set(0.0);
           });
 }
-public Command MoveToScore() {
+public Command MoveToScore() { //dont need this its old specific heigh command
     return run(() -> elevatorMotor.setControl(
       m_request.withPosition(totalHeight * rotationsPerInch)));
   
+  }
+  public Command moveToHeight(int height) { // new elevator command
+return runOnce(() ->  {
+ double targetPosition = height * rotationsPerInch;
+ //double currentPosition = getHeightInches() * rotationsPerInch; relized i didnt need this
+ elevatorMotor.setControl(m_request.withPosition(targetPosition));
+});
   }
 
   public Command checkAndGrab() {
@@ -61,15 +69,24 @@ return run(() -> {
     }
 }).finallyDo(() -> intakeMotor.set(0.0));
 }
-public Command outTake() {
+public Command outTake() { // i was bored in class so i made like 4 intake/outtake commands
   return run(() -> intakeMotor.set(-0.5)).finallyDo(() -> intakeMotor.set(0.0));
 }
 public Command fastOutTake() {
-  return run(() -> intakeMotor.set(-1.0)).finallyDo(() -> intakeMotor.set(0.0));
+  return run(() -> intakeMotor.set(-0.75)).finallyDo(() -> intakeMotor.set(0.0));
 }
 public Command stopIntake() {
   return runOnce(() -> intakeMotor.set(0.0));
 }
-
+public Command shooter() {
+  return run(() -> flyWheel.set(1.0)).finallyDo(() -> flyWheel.set(0.0));
+}
+public Command fullOuttakeJam() {
+  return run(() -> {
+    flyWheel.set(-0.5); intakeMotor.set(-0.5); 
+  }).finallyDo(() -> {
+    flyWheel.set(0.0); intakeMotor.set(0.0);
+  });
+}
 
 }
